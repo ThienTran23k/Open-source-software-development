@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Nhóm 10-CDSL++</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="static/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="static/css/style1.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Topbar Start -->
+
+
+<!-- Navbar Start -->
+<div class="container-fluid bg-dark mb-30">
+    <div class="row px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a class="btn d-flex align-items-center justify-content-between bg-primary w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; padding: 0 30px;">
+                <h6 class="text-dark m-0"><i class="fa fa-bars mr-2"></i>Quản Lí Nhà Hàng</h6>
+                <i class="fa fa-angle-down text-dark"></i>
+            </a>
+            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
+                <div class="navbar-nav w-100">
+                    <a href="" class="nav-item nav-link">Trần Nguyễn Gia Long</a>
+                    <a href="" class="nav-item nav-link">Trần Kim Thiện</a>
+                    <a href="" class="nav-item nav-link">Nguyễn Thanh Danh <3</a>
+                    <a href="" class="nav-item nav-link">Nguyễn Dương Đức Nguyên</a>
+
+                </div>
+            </nav>
+        </div>
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                <a href="" class="text-decoration-none d-block d-lg-none">
+                    <span class="h1 text-uppercase text-dark bg-light px-2">Multi</span>
+                    <span class="h1 text-uppercase text-light bg-primary px-2 ml-n1">Shop</span>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="{{ url_for('home') }}" class="nav-item nav-link active">Trang chủ</a>
+                        <a href="{{ url_for('quanly') }}" class="nav-item nav-link">Quản lí</a>
+                        <a href="{{ url_for('thongke') }}" class="nav-item nav-link">Thống kê</a>
+                        <a href="{{ url_for('logout') }}" class="nav-item nav-link">Đăng xuất</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+
+<!-- Carousel Start -->
+<div class="container-fluid mb-3">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#header-carousel" data-slide-to="1"></li>
+                    <li data-target="#header-carousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item position-relative active" style="height: 430px;">
+                        <img class="position-absolute w-100 h-100" src="static/img/antique-cafe-bg-01.jpg" style="object-fit: cover;">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Quản lí nhà hàng</h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Nhà hàng (hay quán ăn) là một cơ sở chuyên kinh doanh về việc nấu nướng và phục vụ các món ăn và đồ uống cho khách hàng đến mua, chủ yếu dùng ngay ở đó. Ngoài ra, nhiều nhà hàng cũng có thêm dịch vụ đóng gói đồ ăn lại để khách tiện "mang đi" thay vì dùng bữa ngay tại quán. Ngày nay, cũng có nhiều nhà hàng phục cả hình thức ship (giao) đồ ăn tận nhà cho khách.</p>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Tìm hiểu ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item position-relative" style="height: 430px;">
+                        <img class="position-absolute w-100 h-100" src="static/img/antique-cafe-bg-02.jpg" style="object-fit: cover;">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Quản lí nhà hàng</h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Tuỳ theo mỗi quốc gia, mỗi vùng miền, mỗi cộng đồng khác nhau, cũng như những dịch vụ ăn uống, hình thức phục vụ, thực đơn, các món ăn, đồ uống khác nhau, mà người ta phân biệt thành các loại hình nhà hàng đa dạng khác nhau và có đặc thù riêng.</p>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Tìm hiểu ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item position-relative" style="height: 430px;">
+                        <img class="position-absolute w-100 h-100" src="static/img/antique-cafe-bg-03.jpg" style="object-fit: cover;">
+                        <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                            <div class="p-3" style="max-width: 700px;">
+                                <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown">Quản lí nhà hàng</h1>
+                                <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Bạn cần phân biệt: các loại hình nhà hàng và các mô hình kinh doanh nhà hàng – là hai khái niệm khác nhau. Ở trong bài viết dưới đây, chúng tôi sẽ giới thiệu với bạn về các mô hình kinh doanh nhà hàng ăn uống phổ biến hiện nay.</p>
+                                <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="#">Tìm hiểu ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="product-offer mb-30" style="height: 200px;">
+                <img class="img-fluid" src="static/img/menu-item-2.jpg" alt="">
+                <div class="offer-text">
+                    <h3 class="text-white mb-3">Danh sách nhà hàng</h3>
+                    <a href="{{ url_for('display_document') }}" class="btn btn-primary">Xem thêm</a>
+                </div>
+            </div>
+            <div class="product-offer mb-30" style="height: 200px;">
+                <img class="img-fluid" src="static/img/menu-item-6.jpg" alt="">
+                <div class="offer-text">
+                    <h3 class="text-white mb-3">Tinh năng đánh giá của users</h3>
+                    <a href="{{ url_for('display_document_user') }}" class="btn btn-primary">Xem thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Carousel End -->
+
+
+<!-- Featured Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('average_score_by_grade') }}" style="color: black">Phân tích điểm số trung bình theo loại đánh giá(grade)</a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('display_best_restaurants') }}" style="color: black">Những nhà hàng tốt</a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('display_worst_restaurants') }}" style="color: black">Những nhà hàng tệ </a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('display_score_distribution') }}" style="color: black">Phân tích nhà hàng bằng đồ thị phân bố điểm số</a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('count_restaurants_by_borough') }}" style="color: black">Phân tích nhà hàng theo quận và hiển thị đồ thị </a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('count_restaurants_by_cuisine') }}" style="color: black">Thống kê số lượng nhà hàng theo loại ẩm thực (cuisine)</a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('top_cuisines') }}" style="color: black">Thống kê các loại ẩm thực phổ biến nhất</a></h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0"><a href="{{ url_for('count_restaurants_by_grade') }}" style="color: black">Thống kê số lượng nhà hàng theo mỗi loại đánh giá (grade)</a></h5>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Featured End -->
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="static/lib/easing/easing.min.js"></script>
+<script src="static/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Contact Javascript File -->
+<script src="mail/jqBootstrapValidation.min.js"></script>
+<script src="mail/contact.js"></script>
+
+<!-- Template Javascript -->
+<script src="static/js/main.js"></script>
+</body>
+
+</html>
