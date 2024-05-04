@@ -1,0 +1,165 @@
+<!-- delete_document.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận xóa tài liệu</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        header, footer {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+        }
+
+        h2 {
+            color: #4CAF50;
+        }
+
+        form {
+            margin-top: 20px;
+            width: 50%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: space-around; /* Các phần tử con sẽ được căn giữa và chia đều khoảng cách giữa chúng */
+        }
+
+        footer a {
+            text-decoration: none; /* Loại bỏ gạch chân cho liên kết */
+            padding: 10px;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền khi di chuột qua */
+        }
+
+        footer a:hover {
+            background-color: #45a049; /* Màu nền khi di chuột qua */
+        }
+
+    </style>
+</head>
+<body>
+<h2>Xác nhận xóa tài liệu</h2>
+<form method="post" action="{{ url_for('delete_document') }}">
+    <label for="restaurant_id">Nhập Restaurant ID cần xóa:</label>
+    <input type="text" id="restaurant_id" name="restaurant_id" required>
+    <input type="submit" value="Xác nhận xóa">
+</form>
+
+<!-- Hiển thị thông tin nhà hàng nếu có -->
+{% if restaurant_info %}
+    <h3>Thông tin nhà hàng:</h3>
+    <p><strong>Restaurant ID:</strong> {{ restaurant_info['restaurant_id'] }}</p>
+    <p><strong>Name:</strong> {{ restaurant_info['name'] }}</p>
+    <!-- Thêm các trường thông tin khác tương tự -->
+{% endif %}
+
+<!-- Hiển thị phần xác nhận xóa chỉ khi có dữ liệu để hiển thị và không có lỗi -->
+{% if confirmation_message and not error %}
+    <h3>Thông báo:</h3>
+    <p>{{ confirmation_message }}</p>
+{% endif %}
+
+<!-- Hiển thị phần thông báo lỗi khi có lỗi -->
+{% if error %}
+    <h3>Lỗi:</h3>
+    <p>{{ error }}</p>
+{% endif %}
+
+<footer>
+    <a href="{{ url_for('quanly') }}" style="background-color: #1bf09e; padding: 10px; color: white; border-radius: 5px;">Quay lại Trang Quản lý</a>
+    <a href="{{ url_for('thongke') }}" style="background-color: #1bf09e; padding: 10px; color: white; border-radius: 5px;">Sang Trang Thống Kê</a>
+</footer>
+<!-- JavaScript để điền giá trị từ URL vào trường restaurant_id -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Lấy giá trị từ URL
+        var restaurantIdFromUrl = getUrlParameter('restaurant_id');
+
+        // Nếu có giá trị restaurant_id, gán vào trường restaurant_id trong form
+        if (restaurantIdFromUrl) {
+            $('#restaurant_id').val(restaurantIdFromUrl);
+        }
+
+        // Hàm lấy tham số từ URL
+        function getUrlParameter(name) {
+            name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+
+            // Kiểm tra nếu có kết quả và giá trị không phải là rỗng
+            return results !== null ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
+        }
+    });
+</script>
+</body>
+</html>

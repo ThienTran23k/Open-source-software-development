@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa Thông Tin Tài Liệu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+   
+    <style>
+        .new_grade-entry {
+            margin-bottom: 15px;
+        }
+    </style>
+    
+    <script>
+        function addNewGradeEntry() {
+            var container = document.getElementById('new_grades-container');
+            var newEntry = document.createElement('div');
+            newEntry.classList.add('new_grade-entry', 'form-row', 'mb-3');
+            newEntry.innerHTML = `
+                <div class="col-md-4">
+                    <label for="new_grade_date">Ngày mới (YYYY-MM-DD):</label>
+                    <input type="text" name="new_grade_date" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="new_grade_grade">Grade mới:</label>
+                    <input type="text" name="new_grade_grade" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="new_grade_score">Score mới:</label>
+                    <input type="text" name="new_grade_score" class="form-control" required>
+                </div>
+            `;
+            container.appendChild(newEntry);
+        }
+    </script>
+</head>
+<body>
+<form method="POST" action="{{ url_for('update_document') }}" class="needs-validation" novalidate>
+    <input type="hidden" name="restaurant_id" value="{{ document.restaurant_id }}"> <!-- Truyền restaurant_id của tài liệu cần sửa -->
+
+    <div class="form-group">
+        <label for="name">Tên nhà hàng:</label>
+        <input type="text" name="name" class="form-control" value="{{ document.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="borough">Quận:</label>
+        <input type="text" name="borough" class="form-control" value="{{ document.borough }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="cuisine">Ẩm thực:</label>
+        <input type="text" name="cuisine" class="form-control" value="{{ document.cuisine }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="building">Số nhà:</label>
+        <input type="text" name="building" class="form-control" value="{{ document.address.building }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="street">Đường:</label>
+        <input type="text" name="street" class="form-control" value="{{ document.address.street }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="zipcode">Mã Zip:</label>
+        <input type="text" name="zipcode" class="form-control" value="{{ document.address.zipcode }}" required>
+    </div>
+
+    <!-- Định dạng cho new_grades -->
+    <div class="form-group">
+        <label>Grades mới:</label>
+        <div id="new_grades-container"></div>
+        <button type="button" onclick="addNewGradeEntry()" class="btn btn-primary mt-2">Thêm grades mới</button>
+    </div>
+
+    <!-- Trường nhập tệp để tải lên hình ảnh -->
+    <div class="form-group row">
+        <label for="new_img_path" class="col-sm-3 col-form-label">Hình ảnh mới:</label>
+        <div class="col-sm-9">
+            <input type="file" name="new_img_path" class="form-control">
+        </div>
+    </div>
+
+    <!-- Nút submit và quay về trang chính -->
+    <div class="form-group row d-flex justify-content-between">
+        <div class="col-sm-4 text-left">
+            <a href="{{ url_for('quanly') }}" class="btn btn-secondary">Quay về Trang Quản Lý</a>
+        </div>
+        <div class="col-sm-4 text-center">
+            <button type="submit" class="btn btn-primary">Sửa tài liệu</button>
+        </div>
+        <div class="col-sm-4 text-right">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary ml-2">Quay về trang chính</a>
+        </div>
+    </div>
+
+    <!-- Nút submit và quay về -->
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+</form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        // Xử lý sự kiện khi submit form
+        document.querySelector('form').addEventListener('submit', function (event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Lấy giá trị từ URL
+            var restaurantIdFromUrl = getUrlParameter('restaurant_id');
+
+            // Nếu có giá trị restaurant_id, gán vào trường restaurant_id trong form
+            if (restaurantIdFromUrl) {
+                $('input[name="restaurant_id"]').val(restaurantIdFromUrl);
+            }
+
+            // Hàm lấy tham số từ URL
+            function getUrlParameter(name) {
+                name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+
+                // Kiểm tra nếu có kết quả và giá trị không phải là rỗng
+                return results !== null ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
+            }
+        });
+    </script>
+</body>
+</html>

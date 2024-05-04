@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu đồ đường theo loại đánh giá</title>
+
+    <!-- Thêm các thư viện CSS cần thiết cho Plotly -->
+    <link rel="stylesheet" href="https://cdn.plot.ly/plotly.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+	}
+        h2 {
+            color: #e74c3c;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+        }
+
+        .navigation a {
+            padding: 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #e74c3c;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation a:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h2>Biểu đồ đường theo loại đánh giá</h2>
+    <div class="navigation">
+        <a href="{{ url_for('thongke') }}">Quay về Trang thống kê</a>
+        <a href="{{ url_for('home') }}">Quay về Trang chính</a>
+    </div>
+    <!-- Hiển thị đồ thị từ Plotly -->
+    {{ plotly_html | safe }}
+
+    <!-- Thêm các thư viện JavaScript cần thiết cho Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</body>
+</html>

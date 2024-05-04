@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Thêm các phần khác như title, stylesheet, ... -->
+</head>
+<body>
+    <div class="row mt-4">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h2>Nhà Hàng Gần Đây</h2>
+            <p>
+                Dưới đây là một số nhà hàng mà bạn đã thêm gần đây. Những địa điểm này đại diện cho sự đa dạng của cộng đồng nhà hàng và là điểm xuất phát tốt để quản lý và theo dõi.
+            </p>
+            <ul class="list-group text-left">
+                {% for restaurant in recent_restaurants %}
+                    <li class="list-group-item">
+                        <h4 class="mb-2">{{ restaurant.name }}</h4>
+                        <p class="mb-1">Địa chỉ: {{ restaurant.address }}</p>
+                        <p>Mô tả ngắn: {{ restaurant.description }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!-- templates/display_document.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách nhà hàng</title>
+    <link href="static/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Liên kết với file CSS -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .navbar a{
+            padding: 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3D464D;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .navbar a:hover {
+            background-color: #c0392b;
+        }
+
+        h2 {
+            color: #e74c3c;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 80%; /* Giảm chiều rộng của danh sách */
+            margin: 0 auto; /* Canh giữa danh sách */
+        }
+
+        li {
+            background-color: #ecf0f1;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        li:hover {
+            transform: scale(1.02); /* Hiệu ứng phóng to khi hover */
+        }
+
+        hr {
+            border: 1px solid #bdc3c7;
+            margin-top: 15px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center; /* Thay đổi thuộc tính justify-content thành space-between */
+            margin-top: 20px;
+            overflow: auto;
+        }
+
+        .pagination a, .pagination strong {
+            color: #fff;
+            padding: 5px;
+            text-decoration: none;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            display: flex; /* Thay đổi thuộc tính display thành flex */
+        }
+
+        .pagination a:first-child {
+            margin-left: 0; /* Xóa khoảng trắng giữa liên kết đầu tiên và thanh phân trang */
+        }
+
+        .pagination a:last-child {
+            margin-right: 0; /* Xóa khoảng trắng giữa liên kết cuối cùng và thanh phân trang */
+        }
+        .pagination a:hover {
+            background-color: #e74c3c;
+        }
+
+        .pagination strong {
+            background-color: #db6934;
+        }
+        .restaurant-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #bdc3c7;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-info div {
+            margin-right: 10px;
+            flex-grow: 1;
+        }
+
+        .restaurant-info img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 500px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 3;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<!-- Thanh điều hướng -->
+
+<ul>
+    {% for document in documents %}
+        <li class="restaurant-info">
+            <!-- Hiển thị hình ảnh -->
+            {% if 'img_path' in document %}
+                <div>
+                    <img src="{{ url_for('static', filename=document['img_path'].replace('static/', '')) }}" alt="{{ document['name'] }}">
+                </div>
+            {% endif %}
+            <div>
+                <strong>Restaurant ID:</strong> {{ document['restaurant_id'] }}<br>
+                <strong>Name:</strong> {{ document['name'] }}<br>
+                <strong>Borough:</strong> {{ document['borough'] }}<br>
+                <strong>Cuisine:</strong> {{ document['cuisine'] }}<br>
+                <!-- Hiển thị địa chỉ -->
+                <strong>Address:</strong> {{ document['address']['building'] }} {{ document['address']['street'] }}, {{ document['address']['zipcode'] }}<br>
+            </div>
+            <div class="dropdown">
+                <strong>Grades:</strong> <i class="fas fa-caret-down"></i>
+                <div class="dropdown-content">
+                    <ul>
+                        {% for grade in document['grades'] %}
+                            <li>
+                                <strong>Date:</strong> {{ grade['date']|default('N/A') }},
+                                <strong>Grade:</strong> {{ grade['grade']|default('N/A') }},
+                                <strong>Score:</strong> {{ grade['score']|default('N/A') }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <a href="{{ url_for('update_document', restaurant_id=document['restaurant_id']) }}" class="btn btn-primary">Sửa</a>
+                <a href="{{ url_for('delete_document', restaurant_id=document['restaurant_id']) }}" class="btn btn-primary">Xóa</a>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- Thanh điều hướng phân trang -->
+
+<div class="pagination">
+    {% if current_page > 1 %}
+        <a href="{{ url_for('display_document', page=current_page-1) }}">Trang trước</a>
+    {% endif %}
+
+    {% for page_num in range(1, total_pages + 1) %}
+        {% if page_num == current_page %}
+            <strong>{{ page_num }}</strong>
+        {% else %}
+            <a href="{{ url_for('display_document', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if current_page < total_pages %}
+        <a href="{{ url_for('display_document', page=current_page+1) }}">Trang tiếp theo</a>
+    {% endif %}
+
+</div>
+</body>
+<script>
+    function deleteDocument(restaurantId) {
+        // Xác nhận xóa bằng hộp thoại
+        var confirmation = confirm("Bạn có chắc chắn muốn xóa tài liệu này?");
+
+        // Nếu người dùng đồng ý xóa
+        if (confirmation) {
+            // Gửi yêu cầu xoá dữ liệu qua AJAX
+            fetch('/delete_document', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'restaurant_id=' + restaurantId,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hiển thị thông báo thành công
+                        alert(data.message);
+                        // Tải lại trang sau khi xóa thành công
+                        window.location.reload();
+                    } else {
+                        // Hiển thị thông báo lỗi
+                        alert(data.error_message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
+</script>
+</html>
