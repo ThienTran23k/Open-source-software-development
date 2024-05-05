@@ -70,32 +70,25 @@
         <label for="zipcode">Mã Zip:</label>
         <input type="text" name="zipcode" class="form-control" value="{{ document.address.zipcode }}" required>
     </div>
-
-    <!-- Định dạng cho new_grades -->
     <div class="form-group">
-        <label>Grades mới:</label>
-        <div id="new_grades-container"></div>
-        <button type="button" onclick="addNewGradeEntry()" class="btn btn-primary mt-2">Thêm grades mới</button>
+        <label for="description">Mô tả:</label>
+        <textarea name="description" class="form-control" rows="5" required>{{ document.description }}</textarea>
     </div>
-
-    <!-- Trường nhập tệp để tải lên hình ảnh -->
     <div class="form-group row">
-        <label for="new_img_path" class="col-sm-3 col-form-label">Hình ảnh mới:</label>
+        <label for="image" class="col-sm-3 col-form-label">Hình ảnh mới:</label>
         <div class="col-sm-9">
-            <input type="file" name="new_img_path" class="form-control">
-        </div>
-    </div>
-
-    <!-- Nút submit và quay về trang chính -->
-    <div class="form-group row d-flex justify-content-between">
-        <div class="col-sm-4 text-left">
-            <a href="{{ url_for('quanly') }}" class="btn btn-secondary">Quay về Trang Quản Lý</a>
-        </div>
-        <div class="col-sm-4 text-center">
-            <button type="submit" class="btn btn-primary">Sửa tài liệu</button>
-        </div>
-        <div class="col-sm-4 text-right">
-            <a href="{{ url_for('index') }}" class="btn btn-secondary ml-2">Quay về trang chính</a>
+            <input type="file" name="image" id="image" accept="image/*" class="form-control-file" multiple onchange="previewImages(event)">
+            <input type="hidden" id="restaurant_id" name="restaurant_id" value="{{ document['restaurant_id'] }}">
+            <div class="row" id="imagePreviewContainer">
+                {% for image_url in document['image'] %}
+                {% if image_url.endswith('.jpg') %}
+                <div class="col-sm-3" id="imageContainer_{{ loop.index }}">
+                    <img src="{{ url_for('static', filename='img/' + image_url) }}" alt="Restaurant Image" class="img-thumbnail" style="max-width: 200px;">
+                    <button class="btn btn-danger" onclick="deleteImage('{{ image_url }}', { loopindex })">Xóa</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -117,28 +110,60 @@
             }
             this.classList.add('was-validated');
         });
-    </script>
+        function previewImages(event) {
+    var previewContainer = document.getElementById('imagePreviewContainer');
+    previewContainer.innerHTML = ''; // Xóa hình ảnh hiện tại trước khi thêm hình ảnh mới
 
-    <script>
-        $(document).ready(function () {
-            // Lấy giá trị từ URL
-            var restaurantIdFromUrl = getUrlParameter('restaurant_id');
+    var files = event.target.files;
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
 
-            // Nếu có giá trị restaurant_id, gán vào trường restaurant_id trong form
-            if (restaurantIdFromUrl) {
-                $('input[name="restaurant_id"]').val(restaurantIdFromUrl);
-            }
+        reader.onload = function(e) {
+            var img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'img-thumbnail';
+            img.style.maxWidth = '200px';
 
-            // Hàm lấy tham số từ URL
-            function getUrlParameter(name) {
-                name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-                var results = regex.exec(location.search);
+            var col = document.createElement('div');
+            col.className = 'col-sm-3';
+            col.appendChild(img);
 
-                // Kiểm tra nếu có kết quả và giá trị không phải là rỗng
-                return results !== null ? decodeURIComponent(results[1].replace(/\+/g, ' ')) : '';
-            }
-        });
+            var removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-danger';
+            removeButton.textContent = 'Xóa';
+            removeButton.onclick = function() {
+                removeImage(this.parentNode);
+            };
+
+            col.appendChild(removeButton);
+
+            previewContainer.appendChild(col);
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+    function deleteImage(imageUrl, index) {
+    // Xóa hình ảnh khỏi giao diện người dùng
+    var imageDiv = document.getElementById('imageContainer_' + index);
+    imageDiv.parentNode.removeChild(imageDiv);
+
+    // Lấy restaurant_id từ form
+    var restaurantId = document.getElementById('restaurant_id').value;
+
+    // Gửi yêu cầu xoá ảnh đến máy chủ Flask
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/delete_image", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Xử lý phản hồi từ máy chủ (nếu cần)
+        }
+    };
+    xhr.send(JSON.stringify({"restaurant_id": restaurantId, "image_url": imageUrl}));
+}
     </script>
 </body>
 </html>

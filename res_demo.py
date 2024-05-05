@@ -20,9 +20,9 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 # Kết nối đến MongoDB
 client = MongoClient("mongodb://localhost:27017/")
-# Chọn cơ sở dữ liệu, tên cơ sở dữ liệu là "demo"
+# Chọn cơ sở dữ liệu, tên cơ sở dữ liệu là "new_restaurant_database"
 db = client["demo"]
-# Chọn collection, tên collection là "OpenS"
+# Chọn collection, tên collection là "restaurants"
 collection = db["OpenS"]
 
 

@@ -23,9 +23,9 @@ app.secret_key = secrets.token_hex(16)
 # Kết nối đến MongoDB
 client = MongoClient("mongodb://localhost:27017/")
 # Chọn cơ sở dữ liệu, tên cơ sở dữ liệu là "new_restaurant_database"
-db = client["new_restaurant_database"]
+db = client["demo"]
 # Chọn collection, tên collection là "restaurants"
-collection = db["restaurants"]
+collection = db["OpenS"]
 account_res = db["account"]
 
 
@@ -51,6 +51,7 @@ def login():
             # Lưu thông tin đăng nhập vào session
             session['logged_in'] = True
             session['username'] = account['username']  # Lưu username vào session
+            session['role'] = account['role']  # Lưu vai trò vào session
             return redirect(url_for('home'))
         else:
             return "Tên người dùng hoặc mật khẩu không đúng."
@@ -74,6 +75,8 @@ def add_document():
         building = request.form['building']
         street = request.form['street']
         zipcode = request.form['zipcode']
+        image_urls = request.form.getlist('image')  # Lấy danh sách các URL hình ảnh từ form
+        description = request.form['description']  # Lấy nội dung mô tả từ form
 
         # Tạo document từ dữ liệu form
         document = {
@@ -86,8 +89,10 @@ def add_document():
                 "street": street,
                 "zipcode": zipcode
             },
-            "approved": False,  # Mặc định là False
-            "pending_approval": True  # Mặc định là True
+            "image": image_urls,  # Thêm trường "image" vào document
+            "description": description,  # Thêm trường "description" vào document
+            "approved": False,
+            "pending_approval": True
         }
 
         # Thêm document vào collection
@@ -100,50 +105,62 @@ def add_document():
 @app.route('/update_document', methods=['GET', 'POST'])
 def update_document():
     if request.method == 'POST':
-        # Lấy restaurant_id từ form
-        restaurant_id_to_update = request.form['restaurant_id']
-        filter_criteria = {"restaurant_id": restaurant_id_to_update}
+        # Kiểm tra người dùng đã đăng nhập và có vai trò là admin chưa
+        if 'logged_in' in session and session['logged_in'] and session.get('role') == '1':
+            # Lấy restaurant_id từ form
+            restaurant_id_to_update = request.form['restaurant_id']
+            filter_criteria = {"restaurant_id": restaurant_id_to_update}
 
-        # Truy vấn document cần sửa
-        document_to_update = collection.find_one(filter_criteria)
+            # Truy vấn document cần sửa
+            document_to_update = collection.find_one(filter_criteria)
 
-        if not document_to_update:
-            flash(f"Không tìm thấy tài liệu với Restaurant ID {restaurant_id_to_update}", 'error')
-            return redirect(url_for('display_document'))
+            if not document_to_update:
+                flash(f"Không tìm thấy tài liệu với Restaurant ID {restaurant_id_to_update}", 'error')
+                return redirect(url_for('display_document'))
 
-        # Nhập thông tin mới từ form
-        new_name = request.form['name']
-        new_borough = request.form['borough']
-        new_cuisine = request.form['cuisine']
-        new_building = request.form['building']
-        new_street = request.form['street']
-        new_zipcode = request.form['zipcode']
+            # Nhập thông tin mới từ form
+            new_name = request.form['name']
+            new_borough = request.form['borough']
+            new_cuisine = request.form['cuisine']
+            new_building = request.form['building']
+            new_street = request.form['street']
+            new_zipcode = request.form['zipcode']
+            new_image_urls = request.form.getlist('image')  # Lấy danh sách các URL ảnh mới từ form
+            new_description = request.form['description']  # Lấy mô tả mới từ form
 
-        # Tạo một dictionary mới chứa thông tin cập nhật
-        update_data = {
-            "$set": {
-                "name": new_name,
-                "borough": new_borough,
-                "cuisine": new_cuisine,
-                "address": {
-                    "building": new_building,
-                    "street": new_street,
-                    "zipcode": new_zipcode
+            # Tạo một dictionary mới chứa thông tin cập nhật
+            update_data = {
+                "$addToSet": {  # Sử dụng $addToSet để thêm các URL ảnh mới vào mảng image
+                    "image": { "$each": new_image_urls }  # Thêm các phần tử mới vào mảng image
+                },
+                "$set": {  # Dùng $set để cập nhật các trường khác
+                    "name": new_name,
+                    "borough": new_borough,
+                    "cuisine": new_cuisine,
+                    "address": {
+                        "building": new_building,
+                        "street": new_street,
+                        "zipcode": new_zipcode
+                    },
+                    "description": new_description  # Thêm trường description
                 }
             }
-        }
 
-        # Thực hiện cập nhật
-        update_result = collection.update_one(filter_criteria, update_data)
 
-        # Kiểm tra kết quả cập nhật
-        if update_result.modified_count > 0:
-            flash('Thông tin đã được cập nhật thành công!', 'success')
+            # Thực hiện cập nhật
+            update_result = collection.update_one(filter_criteria, update_data)
+
+            # Kiểm tra kết quả cập nhật
+            if update_result.modified_count > 0:
+                flash('Thông tin đã được cập nhật thành công!', 'success')
+            else:
+                flash('Không có tài liệu nào được cập nhật.', 'info')
+
+            # Chuyển hướng về trang hiển thị thông tin tài liệu sau khi cập nhật
+            return redirect(url_for('display_document', document_id=restaurant_id_to_update))
         else:
-            flash('Không có tài liệu nào được cập nhật.', 'info')
-
-        # Chuyển hướng về trang hiển thị thông tin tài liệu sau khi cập nhật
-        return redirect(url_for('display_document', document_id=restaurant_id_to_update))
+            flash('Bạn không có quyền thực hiện thao tác này.', 'error')
+            return redirect(url_for('login'))
 
     elif request.method == 'GET':
         # Xử lý logic khi nhận yêu cầu GET
@@ -157,6 +174,38 @@ def update_document():
 
     return render_template('update_document.html')  # Trả về trang HTML mặc định nếu không có phương thức nào được xác định
 
+from flask import jsonify, request
+
+@app.route('/delete_image', methods=['POST'])
+def delete_image():
+    if request.method == 'POST':
+        data = request.json
+        image_url_to_delete = data.get('image_url')
+        restaurant_id = data.get('restaurant_id')
+
+        if not image_url_to_delete or not restaurant_id:
+            return jsonify({"message": "Missing image_url or restaurant_id"}), 400
+
+        try:
+            # Thực hiện xóa ảnh từ cơ sở dữ liệu
+            update_result = collection.update_one(
+                {"restaurant_id": restaurant_id},
+                {"$pull": {"image": image_url_to_delete}}
+            )
+
+            # Loại bỏ các phần tử trống khỏi mảng 'image'
+            collection.update_one(
+                {"restaurant_id": restaurant_id},
+                {"$pull": {"image": ""}}
+            )
+
+            return jsonify({"message": "Image deleted successfully"}), 200
+
+        except Exception as e:
+            return jsonify({"message": str(e)}), 500
+
+    else:
+        return jsonify({"message": "Invalid request method"}), 405
 
 @app.route('/delete_document', methods=['POST'])
 def delete_document():
@@ -215,6 +264,28 @@ def display_document():
     # Lấy trang hiện tại từ tham số truy vấn
     page = request.args.get('page', 1, type=int)
 
+    # Lấy từ khóa tìm kiếm từ tham số truy vấn
+    search_query = request.args.get('search')
+
+    # Lấy hướng sắp xếp từ tham số truy vấn
+    sort_score = request.args.get('sort_score')
+
+    if search_query:
+        # Tìm kiếm nhà hàng theo tên
+        documents = collection.find({"name": {"$regex": search_query, "$options" :'i'}})
+    else:
+        # Hiển thị tất cả nhà hàng
+        documents = collection.find()
+
+    # Sắp xếp kết quả dựa trên điểm số
+    if sort_score == 'asc':
+        documents = documents.sort('grades.score', 1)
+    elif sort_score == 'desc':
+        documents = documents.sort('grades.score', -1)
+    else:
+        # Mặc định sắp xếp theo _id
+        documents = documents.sort('_id', -1)
+
     # Số lượng tài liệu
     total_documents = collection.count_documents({})
 
@@ -222,8 +293,8 @@ def display_document():
     start_idx = (page - 1) * ITEMS_PER_PAGE
     end_idx = start_idx + ITEMS_PER_PAGE
 
-    # Truy vấn MongoDB để lấy dữ liệu phân trang và đảo ngược thứ tự theo _id
-    documents = collection.find().sort('_id', -1).skip(start_idx).limit(ITEMS_PER_PAGE)
+    # Truy vấn MongoDB để lấy dữ liệu phân trang
+    documents = documents.skip(start_idx).limit(ITEMS_PER_PAGE)
 
     # Tính tổng số trang
     total_pages = (total_documents + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE
