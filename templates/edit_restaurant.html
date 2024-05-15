@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sửa Thông Tin Nhà Hàng</title>
+</head>
+<body>
+<h1>Sửa Thông Tin Nhà Hàng</h1>
+<form method="post">
+    <label for="borough">Quận:</label>
+    <input type="text" id="borough" name="borough" value="{{ restaurant.borough }}" required><br>
+
+    <label for="cuisine">Loại Ẩm Thực:</label>
+    <input type="text" id="cuisine" name="cuisine" value="{{ restaurant.cuisine }}" required><br>
+
+    <label for="name">Tên Nhà Hàng:</label>
+    <input type="text" id="name" name="name" value="{{ restaurant.name }}" required><br>
+
+    <label for="approved">Approved:</label>
+    <input type="checkbox" id="approved" name="approved" value="true" {% if restaurant.approved %}checked{% endif %}><br>
+
+    <label for="pending_approval">Pending Approval:</label>
+    <input type="checkbox" id="pending_approval" name="pending_approval" value="true" {% if restaurant.pending_approval %}checked{% endif %}><br>
+
+    <button type="submit">Lưu Thay Đổi</button>
+</form>
+</body>
+</html>

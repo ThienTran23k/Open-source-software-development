@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Restaurant List</title>
+		<link rel="stylesheet" href="static/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+							<header id="header" class="small-header">
+									<ul class="icons">
+										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+										<li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+										<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+										{% if 'logged_in' in session %}
+										<li><div class="nav-item nav-link">{{ session['username'] }}</div></li>
+										<a href="{{ url_for('logout') }}" class="nav-item nav-link">Đăng xuất</a>
+										{% else %}
+										<a href="{{ url_for('login') }}" class="nav-item nav-link">Đăng nhập</a>
+										{% endif %}
+									</ul>
+								</header>
+
+							<!-- Banner -->
+								<section id="banner">
+									<div class="content">
+										<header>
+											<h1>Chào mừng bạn đến với chúng tôi</h1>
+											<p>Website tham khảo các nhà hảng nổi bật</p>
+										</header>
+										<p>Đây là nơi bạn có thể chọn lựa những nhà hàng phù hợp với bản thân dựa vào sở thích của bạn</p>
+										<ul class="actions">
+											<li><a href="#" class="button big">Đọc thêm</a></li>
+										</ul>
+									</div>
+									<span class="image object">
+										<img src="static/img/R.jpg" alt="" />
+									</span>
+								</section>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Website Creator</h2>
+									</header>
+									<div class="features">
+										<article>
+											<img src="static/img/kuro.jpg" class="icon fa-gem">
+											<div class="content">
+												<h3>Nguyễn Dương Đức Nguyên</h3>
+												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+											</div>
+										</article>
+										<article>
+											<span class="icon solid fa-paper-plane"></span>
+											<div class="content">
+												<h3>Trần Kim Thiện</h3>
+												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+											</div>
+										</article>
+										<article>
+											<span class="icon solid fa-rocket"></span>
+											<div class="content">
+												<h3>Nguyễn Thanh Danh</h3>
+												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+											</div>
+										</article>
+										<article>
+											<span class="icon solid fa-signal"></span>
+											<div class="content">
+												<h3>Trần Nguyễn Gia Long</h3>
+												<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+											</div>
+										</article>
+									</div>
+								</section>
+
+							<!-- Section -->
+							<section>
+								<header class="major">
+									<h2>Nhà hàng nổi bật</h2>
+								</header>
+								<div class="posts">
+									{% for restaurant in restaurants %}
+									{% if loop.index <= 12 %}
+									<article>
+										<div class="image-grid">
+											<div class="upper-image">
+												{% if restaurant['image'] %}
+												{% set first_image_url = restaurant['image'][0] %}
+												{% if first_image_url.endswith('.jpg') %}
+												<div class="col-4">
+													<img src="{{ url_for('static', filename='img/' + first_image_url) }}" alt="Restaurant Image" class="img-thumbnail" style="width: 200px; height: 200px; object-fit: cover;">
+												</div>
+												{% endif %}
+												{% else %}
+												<div class="col">
+													<em>No images available.</em>
+												</div>
+												{% endif %}
+											</div>
+										</div>
+										<h3>{{ restaurant['name'] }}</h3>
+										<p>{{ restaurant['description'] }}</p>
+										<ul class="actions">
+											<li class="button-container">
+												<a href="#" class="button">More</a>
+												<!-- Thêm một hàng gồm 5 ngôi sao -->
+												<div class="rating">
+													<span class="star">&#9733;</span>
+													<span class="star">&#9733;</span>
+													<span class="star">&#9733;</span>
+													<span class="star">&#9733;</span>
+													<span class="star">&#9733;</span>
+												</div>
+											</li>
+										</ul>
+									</article>
+									{% endif %}
+									{% endfor %}
+								</div>
+
+							</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+							<!-- Search -->
+								<section id="search" class="alt">
+									<form method="post" action="#">
+										<input type="text" name="query" id="query" placeholder="Search" />
+									</form>
+								</section>
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="{{ url_for('add_document') }}">Đóng góp nhà hàng</a></li>
+										<li><a href="{{ url_for('display_document') }}">Danh sách nhà hàng</a></li>
+
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<!--<section>
+									<header class="major">
+										<h2>Ante interdum</h2>
+									</header>
+									<div class="mini-posts">
+										<article>
+											<a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="images/pic08.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="images/pic09.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+									</div>
+									<ul class="actions">
+										<li><a href="#" class="button">More</a></li>
+									</ul>
+								</section>
+
+							&lt;!&ndash; Section &ndash;&gt;
+								<section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+									<ul class="contact">
+										<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+										<li class="icon solid fa-phone">(000) 000-0000</li>
+										<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+										Nashville, TN 00000-0000</li>
+									</ul>
+								</section>
+
+							&lt;!&ndash; Footer &ndash;&gt;
+								<footer id="footer">
+									<p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>-->
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script>
+
+			</script>
+	</body>
+</html>
