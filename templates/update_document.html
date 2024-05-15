@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa Thông Tin Tài Liệu</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        .new_grade-entry {
+            margin-bottom: 15px;
+        }
+        .text-center {
+    text-align: center;
+    margin-top: 5vh; /* Đặt margin-top bằng 50% chiều cao của viewport */
+    transform: translateY(-50%); /* Dịch chuyển lên trên 50% của chính nó để căn giữa */
+}
+    </style>
+
+    <script>
+        function addNewGradeEntry() {
+            var container = document.getElementById('new_grades-container');
+            var newEntry = document.createElement('div');
+            newEntry.classList.add('new_grade-entry', 'form-row', 'mb-3');
+            newEntry.innerHTML = `
+                <div class="col-md-4">
+                    <label for="new_grade_date">Ngày mới (YYYY-MM-DD):</label>
+                    <input type="text" name="new_grade_date" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="new_grade_grade">Grade mới:</label>
+                    <input type="text" name="new_grade_grade" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="new_grade_score">Score mới:</label>
+                    <input type="text" name="new_grade_score" class="form-control" required>
+                </div>
+            `;
+            container.appendChild(newEntry);
+        }
+    </script>
+</head>
+<body>
+<h1 class="text-center">Chỉnh sửa thông tin nhà hàng</h1>
+</body>
+    <form method="POST" action="{{ url_for('update_document') }}" class="needs-validation" novalidate>
+        <input type="hidden" name="restaurant_id" value="{{ document.restaurant_id }}"> <!-- Truyền restaurant_id của tài liệu cần sửa -->
+
+        <div class="form-group">
+            <label for="name">Tên nhà hàng:</label>
+            <input type="text" name="name" class="form-control" value="{{ document.name }}" required>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="borough">Quận:</label>
+                <input type="text" name="borough" class="form-control" value="{{ document.borough }}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="cuisine">Ẩm thực:</label>
+                <input type="text" name="cuisine" class="form-control" value="{{ document.cuisine }}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Địa chỉ:</label>
+            <input type="text" name="building" class="form-control mb-2" value="{{ document.address.building }}" placeholder="Số nhà" required>
+            <input type="text" name="street" class="form-control mb-2" value="{{ document.address.street }}" placeholder="Đường" required>
+            <input type="text" name="zipcode" class="form-control" value="{{ document.address.zipcode }}" placeholder="Mã Zip" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Mô tả:</label>
+            <textarea name="description" class="form-control" rows="5" required>{{ document.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Chỉnh sửa hình ảnh:</label>
+
+            <input type="hidden" id="restaurant_id" name="restaurant_id" value="{{ document['restaurant_id'] }}">
+            <div class="row mt-3" id="imagePreviewContainer">
+                {% for image_url in document['image'] %}
+                {% if image_url.endswith('.jpg') %}
+                <div class="col-md-4 mb-3" id="imageContainer_{{ loop.index }}">
+                    <img src="{{ url_for('static', filename='img/' + image_url) }}" alt="Restaurant Image" class="img-thumbnail" style="max-width: 150px;">
+                    <button class="btn btn-danger mt-2" onclick="deleteImage('{{ image_url }}', {{ loop.index }})">Xóa</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <input type="file" name="image" id="image" accept="image/*" class="form-control-file" multiple onchange="previewImages(event)">
+        </div>
+
+        <!-- Nút submit và quay về -->
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    </form>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    // Xử lý sự kiện khi submit form
+    document.querySelector('form').addEventListener('submit', function (event) {
+        if (!this.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        this.classList.add('was-validated');
+    });
+    function previewImages(event) {
+var previewContainer = document.getElementById('imagePreviewContainer');
+previewContainer.innerHTML = ''; // Xóa hình ảnh hiện tại trước khi thêm hình ảnh mới
+
+var files = event.target.files;
+for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'img-thumbnail';
+        img.style.maxWidth = '200px';
+
+        var col = document.createElement('div');
+        col.className = 'col-sm-3';
+        col.appendChild(img);
+
+        var removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-danger';
+        removeButton.textContent = 'Xóa';
+        removeButton.onclick = function() {
+            removeImage(this.parentNode);
+        };
+
+        col.appendChild(removeButton);
+
+        previewContainer.appendChild(col);
+    };
+
+    reader.readAsDataURL(file);
+}
+
+}
+function deleteImage(imageUrl, index) {
+// Xóa hình ảnh khỏi giao diện người dùng
+var imageDiv = document.getElementById('imageContainer_' + index);
+imageDiv.parentNode.removeChild(imageDiv);
+
+// Lấy restaurant_id từ form
+var restaurantId = document.getElementById('restaurant_id').value;
+
+// Gửi yêu cầu xoá ảnh đến máy chủ Flask
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "/delete_image", true);
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        // Xử lý phản hồi từ máy chủ (nếu cần)
+    }
+};
+xhr.send(JSON.stringify({"restaurant_id": restaurantId, "image_url": imageUrl}));
+}
+</script>
+</body>
+</html>
