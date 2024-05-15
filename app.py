@@ -1,19 +1,11 @@
-from flask import Flask, flash, g, jsonify, render_template, request, redirect, url_for, render_template_string
+from flask import Flask, flash, render_template, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime
-from bson import ObjectId, SON
 import secrets
 import plotly.express as px
 import plotly.io as pio
-import io
-import base64
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import pandas as pd
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired
 from wtforms import StringField, TextAreaField, IntegerField, SubmitField, validators ,SelectField
 from flask import session
 
