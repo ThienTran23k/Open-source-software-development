@@ -6,8 +6,8 @@
 * ­Công cụ vẽ sơ đồ phân tích và thiết kế dữ liệu: `Draw.io`
 
 # Yêu cầu cài đặt
-Sử dụng `Python 3.11`
-Sử dụng thư viện Python: `flask`, `flask_wtf`, `pymongo`, `plotly`, `wtforms`
+* Sử dụng `Python 3.11`
+* Sử dụng thư viện Python: `flask`, `flask_wtf`, `pymongo`, `plotly`, `wtforms`
 
 # Hướng dẫn cài đặt chương trình
 ## Bước 1: Mở project bằng hai IDE trên
@@ -22,7 +22,7 @@ Mở cmd trong Windows để tiến hành cài đặt
 * wtforms: `pip install wtforms`
 ## Bước 3: Tạo cơ sở dữ liệu trong MongoDB
 Chúng ta tiến hành tạo cơ sở dữ liệu trong MongoDB qua localhost:27017.
-Khi đã tạo local host, hãy tạo một cơ sở dữ liệu mới với tên `new_restaurant_database`. Tạo hai collection là `account` và `restaurants`.
+Khi đã tạo local host, hãy tạo một cơ sở dữ liệu mới với tên `new_restaurant_database`, tạo thêm hai collection là `account` và `restaurants`.
 Sau cùng là là Import dữ liệu từ thư mục `database` trong project.
 ## Bước 4: Chạy project
 Sau khi hoàn thành các bước trên, ta đã có thể tiến hành chạy chương trình.
