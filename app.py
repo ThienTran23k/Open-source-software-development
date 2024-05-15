@@ -1,7 +1,7 @@
 from flask import Flask, flash, g, jsonify, render_template, request, redirect, url_for, render_template_string
 from pymongo import MongoClient
 from datetime import datetime
-from bson import ObjectId
+from bson import ObjectId, SON
 import secrets
 import plotly.express as px
 import plotly.io as pio
@@ -23,21 +23,22 @@ app.secret_key = secrets.token_hex(16)
 # Kết nối đến MongoDB
 client = MongoClient("mongodb://localhost:27017/")
 # Chọn cơ sở dữ liệu, tên cơ sở dữ liệu là "new_restaurant_database"
-db = client["demo"]
+db = client["new_restaurant_database"]
 # Chọn collection, tên collection là "restaurants"
-collection = db["OpenS"]
+collection = db["restaurants"]
 account_res = db["account"]
 
 
 @app.route('/')
 def index():
     restaurants = collection.find()  # Lấy dữ liệu từ MongoDB
-    return render_template('index.html', restaurants=restaurants)
+    return render_template('index_restaurant.html', restaurants=restaurants)
 
 @app.route('/home')
 def home():
+    restaurants = collection.find()
     username = session.get('username')
-    return render_template('index.html', username=username)
+    return render_template('index_restaurant.html', username=username, restaurants=restaurants)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,7 +65,8 @@ def logout():
     session.pop('logged_in', None)
     session.pop('username', None)
     return redirect(url_for('index'))
-@app.route('/add_document', methods=['GET', 'POST'])
+
+@app.route('/api/add_document', methods=['GET', 'POST'])
 def add_document():
     if request.method == 'POST':
         # Lấy dữ liệu từ form
@@ -98,6 +100,35 @@ def add_document():
         # Thêm document vào collection
         insert_result = collection.insert_one(document)
         print(f"Đã thêm tài liệu với ID: {insert_result.inserted_id}")
+
+        # Convert ObjectId to string
+        inserted_id_str = str(insert_result.inserted_id)
+
+        # Bổ sung thông tin nhà hàng vào chuỗi JSON trả về
+        response_data = {
+            "message": "Nhà hàng đã được thêm thành công",
+            "redirect_url": "/display_document",
+            "restaurant_info": {
+                "_id": inserted_id_str,  # Convert ObjectId to string
+                "restaurant_id": restaurant_id,
+                "name": name,
+                "borough": borough,
+                "cuisine": cuisine,
+                "address": {
+                    "building": building,
+                    "street": street,
+                    "zipcode": zipcode
+                },
+                "image": image_urls,  # Thêm trường "image" vào document
+                "description": description,  # Thêm trường "description" vào document
+                "approved": False,
+                "pending_approval": True
+            }
+        }
+
+        # Trả về JSON
+        return jsonify(response_data)
+
 
     return render_template('add_document.html')
 
@@ -271,8 +302,14 @@ def display_document():
     sort_score = request.args.get('sort_score')
 
     if search_query:
-        # Tìm kiếm nhà hàng theo tên
-        documents = collection.find({"name": {"$regex": search_query, "$options" :'i'}})
+        # Tìm kiếm nhà hàng theo tên, borough, và cuisine
+        documents = collection.find({
+            "$or": [
+                {"name": {"$regex": search_query, "$options" :'i'}},
+                {"borough": {"$regex": search_query, "$options" :'i'}},
+                {"cuisine": {"$regex": search_query, "$options" :'i'}}
+            ]
+        })
     else:
         # Hiển thị tất cả nhà hàng
         documents = collection.find()
@@ -300,7 +337,6 @@ def display_document():
     total_pages = (total_documents + ITEMS_PER_PAGE - 1) // ITEMS_PER_PAGE
 
     return render_template('display_document.html', documents=documents, current_page=page, total_pages=total_pages)
-
 
 
 
@@ -579,6 +615,8 @@ def user_grade():
     restaurant_id = request.args.get('restaurant_id')
 
     return render_template('user_grade.html', default_restaurant_id=restaurant_id)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
