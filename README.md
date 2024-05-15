@@ -24,4 +24,5 @@ Mở cmd trong Windows để tiến hành cài đặt
 Chúng ta tiến hành tạo cơ sở dữ liệu trong MongoDB qua localhost:27017.
 Khi đã tạo local host, hãy tạo một cơ sở dữ liệu mới với tên `new_restaurant_database`. Tạo hai collection là `account` và `restaurants`.
 Sau cùng là là Import dữ liệu từ thư mục `database` trong project.
-
+## Bước 4: Chạy project
+Sau khi hoàn thành các bước trên, ta đã có thể tiến hành chạy chương trình.
