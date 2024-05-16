@@ -6,7 +6,10 @@ import plotly.express as px
 import plotly.io as pio
 import pandas as pd
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, SubmitField, validators ,SelectField
+from wtforms import StringField, TextAreaField, IntegerField, SubmitField, validators
+from wtforms.fields.simple import PasswordField
+from wtforms.validators import DataRequired, Email, EqualTo
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import session
 
 
@@ -34,6 +37,7 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
     if request.method == 'POST':
         account = account_res.find_one({
             "username": request.form.get('username'),
@@ -47,16 +51,39 @@ def login():
             session['role'] = account['role']  # Lưu vai trò vào session
             return redirect(url_for('home'))
         else:
-            return "Tên người dùng hoặc mật khẩu không đúng."
+            error = "Tên người dùng hoặc mật khẩu không đúng."
 
-    else:
-        return render_template('login.html')
+    return render_template('login.html', error=error)
+
 @app.route('/logout')
 def logout():
     # Xóa thông tin đăng nhập khỏi session
     session.pop('logged_in', None)
     session.pop('username', None)
     return redirect(url_for('index'))
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Tên đăng nhập', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Mật khẩu', validators=[DataRequired()])
+    confirm_password = PasswordField('Xác nhận mật khẩu', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Đăng ký')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = {
+            "username": form.username.data,
+            "email": form.email.data,
+            "password": hashed_password
+        }
+        account_res.insert_one(new_user)
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
 
 @app.route('/api/add_document', methods=['GET', 'POST'])
 def add_document():
