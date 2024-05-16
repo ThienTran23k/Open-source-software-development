@@ -7,7 +7,7 @@
 
 # Yêu cầu cài đặt
 * Sử dụng `Python 3.11`
-* Sử dụng thư viện Python: `flask`, `flask_wtf`, `pymongo`, `plotly`, `wtforms`
+* Sử dụng thư viện Python: `flask`, `flask_wtf`, `pymongo`, `plotly`, `wtforms`, `werkzeug`
 
 # Hướng dẫn cài đặt chương trình
 ## Bước 1: Mở project bằng hai IDE trên
@@ -20,6 +20,7 @@ Mở cmd trong Windows để tiến hành cài đặt
 * pandas: `pip install pandas`
 * flask_wtf: `pip install flask-wtf`
 * wtforms: `pip install wtforms`
+* werkzeug: `pip install werkzeug`
 ## Bước 3: Tạo cơ sở dữ liệu trong MongoDB
 Chúng ta tiến hành tạo cơ sở dữ liệu trong MongoDB qua localhost:27017.
 Khi đã tạo local host, hãy tạo một cơ sở dữ liệu mới với tên `new_restaurant_database`, tạo thêm hai collection là `account` và `restaurants`.
