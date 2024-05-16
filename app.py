@@ -282,9 +282,6 @@ def delete_document():
             return jsonify({'success': False, 'error_message': f"Không tìm thấy nhà hàng có ID {restaurant_id_to_delete}."})
 
 
-
-
-
 @app.route('/confirm_delete', methods=['POST'])
 def confirm_delete():
     if request.method == 'POST':
@@ -304,6 +301,21 @@ def confirm_delete():
             flash("Tài liệu với Restaurant ID {} không tồn tại.".format(restaurant_id_to_delete), 'error')
 
     return render_template('confirm_delete.html')
+
+
+
+@app.route('/restaurant_detail/<restaurant_id>')
+def restaurant_detail(restaurant_id):
+    # Tìm nhà hàng dựa trên restaurant_id
+    restaurant = collection.find_one({"restaurant_id": restaurant_id})
+
+    if restaurant is None:
+        # Nếu không tìm thấy nhà hàng, hiển thị lỗi
+        flash("Không tìm thấy nhà hàng với ID này.", "error")
+        return redirect(url_for('display_document'))
+
+    return render_template('restaurant_detail.html', restaurant=restaurant)
+
 
 
 # Số lượng items trên mỗi trang
