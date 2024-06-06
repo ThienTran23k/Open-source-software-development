@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="static/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="static/css/style1.css" rel="stylesheet">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div id="container">
+    <ul>
+        <li style="text-align: left;"><a href="{{ url_for('display_document') }}">
+            <button>1. Hiển thị danh sách nhà hàng</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('display_best_restaurants') }}">
+            <button>2. Những nhà hàng đáng ăn nhất</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('display_worst_restaurants') }}">
+            <button>3. Những nhà hàng không đáng ăn</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('display_score_distribution') }}">
+            <button>4. Phân tích nhà hàng bằng đồ thị phân bố điểm số</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('count_restaurants_by_borough') }}">
+            <button>5. Phân tích nhà hàng theo quận và hiển thị đồ thị</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('count_restaurants_by_cuisine') }}">
+            <button>6. Thống kê số lượng nhà hàng theo loại ẩm thực (cuisine)</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('top_cuisines') }}">
+            <button>7. Thống kê các loại ẩm thực phổ biến nhất</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('count_restaurants_by_grade') }}">
+            <button>8. Thống kê số lượng nhà hàng theo mỗi loại đánh giá (grade)</button>
+        </a></li>
+        <li style="text-align: left;"><a href="{{ url_for('average_score_by_grade') }}">
+            <button>9. Phân tích điểm số trung bình theo loại đánh giá(grade)</button>
+        </a></li>
+    </ul>
+</div>
+<script src="static/js/script.js"></script> <!-- Điều chỉnh đường dẫn tới file JavaScript -->
+</body>
+</html>
